@@ -2,26 +2,28 @@
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using TeddySmith.Data;
+using TeddySmith.Interfaces;
 using TeddySmith.Models;
+using TeddySmith.Repository;
 
 namespace TeddySmith.Controllers
 {
     public class RaceController : Controller
     {
-        private readonly MyDbContext context;
+        private readonly IRaceRepository raceRepository;
 
-        public RaceController(MyDbContext context)
+        public RaceController(IRaceRepository raceRepository)
         {
-            this.context = context;
+            this.raceRepository = raceRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Race> races=context.Races.ToList();
+            IEnumerable<Race> races=await raceRepository.GetAll();
             return View(races);
         }
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
-            Race race=context.Races.Include(a=>a.Address).SingleOrDefault(r => r.Id == id);
+            Race race=await raceRepository.GetByIdAsync(id);
             if(race != null ) 
             return View(race);
             return NotFound("sorry dude");

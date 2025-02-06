@@ -166,3 +166,4 @@ C:\Users\wwwab\source\repos\TeddySmith\TeddySmith\bin\Debug\net8.0\runtimes\brow
 C:\Users\wwwab\source\repos\TeddySmith\TeddySmith\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\wwwab\source\repos\TeddySmith\TeddySmith\obj\Debug\net8.0\TeddySmith.csproj.AssemblyReference.cache
 C:\Users\wwwab\source\repos\TeddySmith\TeddySmith\obj\Debug\net8.0\TeddySmith.csproj.Up2Date
+C:\Users\wwwab\source\repos\TeddySmith\TeddySmith\obj\Debug\net8.0\TeddySmith.sourcelink.json

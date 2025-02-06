@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TeddySmith.Data;
+using TeddySmith.Interfaces;
+using TeddySmith.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MyDbContext>(options => {
@@ -8,6 +10,8 @@ builder.Services.AddDbContext<MyDbContext>(options => {
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IClubRepository, ClubRepository>();
+builder.Services.AddScoped<IRaceRepository, RaceRepository>();
 
 var app = builder.Build();
 if (args.Length == 1 && args[0].ToLower() == "seeddata")

@@ -1,27 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeddySmith.Data;
+using TeddySmith.Interfaces;
 using TeddySmith.Models;
 
 namespace TeddySmith.Controllers
 {
     public class ClubController : Controller
     {
-        private readonly MyDbContext context;
+        private readonly IClubRepository clubRepository;
 
-        public ClubController(MyDbContext context)
+        public ClubController(IClubRepository clubRepository)
         {
-            this.context = context;
+            this.clubRepository = clubRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Club> clubs = context.Clubs.ToList();
+            IEnumerable<Club> clubs = await clubRepository.GetAll();
             return View(clubs);
         }
 
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
-            Club club = context.Clubs.Include(a => a.Address).SingleOrDefault(r => r.Id == id);
+            Club club = await clubRepository.GetByIdAsync(id);
             if (club != null)
                 return View(club);
             return NotFound("sorry dude");
