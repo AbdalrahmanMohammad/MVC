@@ -5,16 +5,19 @@ using TeddySmith.Data;
 using TeddySmith.Interfaces;
 using TeddySmith.Models;
 using TeddySmith.Repository;
+using TeddySmith.ViewModels;
 
 namespace TeddySmith.Controllers
 {
     public class RaceController : Controller
     {
         private readonly IRaceRepository raceRepository;
+        private readonly IPhotoService photoService;
 
-        public RaceController(IRaceRepository raceRepository)
+        public RaceController(IRaceRepository raceRepository, IPhotoService photoService)
         {
             this.raceRepository = raceRepository;
+            this.photoService = photoService;
         }
         public async Task<IActionResult> Index()
         {
@@ -44,14 +47,29 @@ namespace TeddySmith.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Create(Race race)
+        public async Task<IActionResult> Create(CreateRaceViewModel raceVM)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(race);
+                var result = await photoService.AddPhotoAsync(raceVM.Image);
+                var race = new Race
+                {
+                    Title = raceVM.Title,
+                    Description = raceVM.Description,
+                    RaceCategory = raceVM.RaceCategory,
+                    Address = new Address
+                    {
+                        Street = raceVM.Address.Street,
+                        City = raceVM.Address.City,
+                        State = raceVM.Address.State,
+                    },
+                    Image = result.Url.ToString(),
+                };
+                raceRepository.Add(race);
+                return RedirectToAction("Index");
             }
-            raceRepository.Add(race);
-            return RedirectToAction("Index");
+            else { ModelState.AddModelError("", "photo upload failed"); }
+            return View(raceVM);
         }
     }
 }

@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using TeddySmith.Data;
+using TeddySmith.helpers;
 using TeddySmith.Interfaces;
 using TeddySmith.Repository;
+using TeddySmith.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MyDbContext>(options => {
@@ -12,6 +14,8 @@ builder.Services.AddDbContext<MyDbContext>(options => {
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IClubRepository, ClubRepository>();
 builder.Services.AddScoped<IRaceRepository, RaceRepository>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 
 var app = builder.Build();
 if (args.Length == 1 && args[0].ToLower() == "seeddata")

@@ -1,11 +1,12 @@
 ﻿@using TeddySmith.Data.Enum
-@model Club
+@using TeddySmith.ViewModels
+@model CreateClubViewModel
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
-<form method="post" asp-action="Create">
+<form method="post" asp-action="Create" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="Title" for="exampleInputEmail1">Title</label>
         <input asp-for="Title"  class="form-control" placeholder="Enter Title">
@@ -15,11 +16,6 @@
         <label asp-for="Description" for="exampleInputEmail1">Description</label>
         <input asp-for="Description"  class="form-control" placeholder="Enter Description">
         <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Image" for="exampleInputEmail1">Image</label>
-        <input asp-for="Image" class="form-control" placeholder="Enter Image">
-        <span asp-validation-for="Image" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Address.City" for="exampleInputEmail1">City</label>
@@ -43,6 +39,10 @@
         </select>
         <span asp-validation-for="ClubCategory" class="text-danger"></span>
     </div>
-   
+    <div class="form-group">
+        <label asp-for="Image" for="exampleInputEmail1">Image</label>
+        <input asp-for="Image" type="file" class="form-control" placeholder="Enter Image">
+        <span asp-validation-for="Image" class="text-danger"></span>
+    </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
