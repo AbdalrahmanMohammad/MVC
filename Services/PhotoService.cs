@@ -26,8 +26,6 @@ namespace TeddySmith.Services
             if (file.Length > 0)
             {
                 using var stream = file.OpenReadStream();
-                Console.WriteLine(">>>>>>");
-                Console.WriteLine(file.FileName);
                 var uploadParams = new ImageUploadParams
                 {
                     File = new FileDescription(file.FileName, stream),
@@ -44,5 +42,21 @@ namespace TeddySmith.Services
             var result = await _cloundinary.DestroyAsync(deleteParams);
             return result;
         }
+        public string GetPublicIdFromUrl(string imageUrl)
+        {
+            var parts = imageUrl.Split('/');
+            if (parts.Length < 2) return "sss";
+
+            var filename = parts[^1]; // Get last part: "lytz5vljrlnlpj8ehphk.jpg"
+            var versionIndex = Array.FindIndex(parts, p => p.StartsWith("v")); // Find "v1739019547"
+
+            if (versionIndex > 0 && versionIndex < parts.Length - 1)
+            {
+                return filename.Split('.')[0]; // Remove file extension, return "lytz5vljrlnlpj8ehphk"
+            }
+
+            return "sss";
+        }
+
     }
 }
