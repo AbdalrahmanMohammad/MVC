@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TeddySmith.Data;
 using TeddySmith.helpers;
 using TeddySmith.Interfaces;
+using TeddySmith.Models;
 using TeddySmith.Repository;
 using TeddySmith.Services;
 
@@ -16,11 +19,19 @@ builder.Services.AddScoped<IClubRepository, ClubRepository>();
 builder.Services.AddScoped<IRaceRepository, RaceRepository>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<MyDbContext>();
+builder.Services.AddMemoryCache();
+builder.Services.AddSession();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+       .AddCookie();
+
 
 var app = builder.Build();
 if (args.Length == 1 && args[0].ToLower() == "seeddata")
-{ 
-Seed.SeedData(app);
+{
+   await Seed.SeedUsersAndRolesAsync(app);
+    //Seed.SeedData(app);
 }
 
 

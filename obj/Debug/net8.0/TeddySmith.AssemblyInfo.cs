@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TeddySmith")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f9c25b3f83c6827b5d06387f5241d6024610629d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+29bbf931e6421024fe2c9e7058a87be647b1116d")]
 [assembly: System.Reflection.AssemblyProductAttribute("TeddySmith")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TeddySmith")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
