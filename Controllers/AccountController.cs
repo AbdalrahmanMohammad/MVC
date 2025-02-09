@@ -6,15 +6,15 @@ using TeddySmith.ViewModels;
 
 namespace TeddySmith.Controllers
 {
-    public class AccountController:Controller
+    public class AccountController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
-            private readonly SignInManager<AppUser> _signInManager;  
+        private readonly SignInManager<AppUser> _signInManager;
         private readonly MyDbContext _context;
         public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, MyDbContext context)
         {
             _context = context;
-            _userManager = userManager; 
+            _userManager = userManager;
             _signInManager = signInManager;
         }
         public IActionResult Login()
@@ -41,5 +41,43 @@ namespace TeddySmith.Controllers
             TempData["Error"] = "user not even found dude";
             return View(loginViewModel);
         }
+        public IActionResult Register()
+        {
+            var response = new RegisterViewModel();
+            return View(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        {
+            if (!ModelState.IsValid) return View(registerViewModel);
+            var user = await _userManager.FindByEmailAsync(registerViewModel.EmailAddress);
+            if (user != null) {
+                TempData["Error"] = "user already exist";
+                return View(registerViewModel);
+            }
+            var newUser = new AppUser()
+            {
+                Email = registerViewModel.EmailAddress,
+                UserName = registerViewModel.EmailAddress
+            };
+            var newUserResponse = await _userManager.CreateAsync(newUser, registerViewModel.Password);
+            if (newUserResponse.Succeeded) {
+                await _userManager.AddToRoleAsync(newUser, UserRoles.User);
+                return RedirectToAction("Index", "Race");
+            }
+            foreach (var error in newUserResponse.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+            return View(registerViewModel);
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        { 
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Race");
+        }
+
     }
 }
