@@ -48,10 +48,11 @@ namespace TeddySmith.Controllers
                     Title = clubVM.Title,
                     Description = clubVM.Description,
                     Image = result.Url.ToString(),
-                    Address = new Address {
-                        Street=clubVM.Address.Street,
-                        City=clubVM.Address.City,  
-                        State=clubVM.Address.State,
+                    Address = new Address
+                    {
+                        Street = clubVM.Address.Street,
+                        City = clubVM.Address.City,
+                        State = clubVM.Address.State,
                     },
                     ClubCategory = clubVM.ClubCategory,
                 };
@@ -82,7 +83,7 @@ namespace TeddySmith.Controllers
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "photo upload failed");
-                return View("Edit", clubVM); 
+                return View("Edit", clubVM);
             }
             var userClub = await clubRepository.GetByIdAsyncNoTracking(id);
             if (userClub == null)
@@ -113,7 +114,7 @@ namespace TeddySmith.Controllers
                 Id = id,
                 Title = clubVM.Title,
                 Description = clubVM.Description,
-                Image = photoResult?.Url?.ToString() ?? userClub.Image, 
+                Image = photoResult?.Url?.ToString() ?? userClub.Image,
                 AddressId = userClub.AddressId,
                 Address = clubVM.Address,
             };
@@ -121,5 +122,42 @@ namespace TeddySmith.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> Delete(int id)
+        {
+            var club = await clubRepository.GetByIdAsync(id);
+            if (club == null) return View("Error");
+            var clubVM = new EditClubViewModel
+            {
+                Title = club.Title,
+                Description = club.Description,
+                AddressId = club.AddressId,
+                Address = club.Address,
+                URL = club.Image,
+                ClubCategory = club.ClubCategory,
+            };
+            return View(clubVM);
+        }
+        [HttpPost, ActionName("Deletee")]
+        public async Task<IActionResult> Delete(int id, EditClubViewModel clubVM)
+        {
+            var userClub = await clubRepository.GetByIdAsyncNoTracking(id);
+            if (userClub == null)
+            {
+                return View("Error");
+            }
+            if (userClub.Image != null)
+                try
+                {
+                    string publicId = photoService.GetPublicIdFromUrl(userClub.Image);
+                    await photoService.DeletePhotoAsync(publicId);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "could not delete photo");
+                    return View(clubVM);
+                }
+             clubRepository.Delete(userClub);
+            return RedirectToAction("Index");
+        }
     }
 }

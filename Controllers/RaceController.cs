@@ -131,5 +131,42 @@ namespace TeddySmith.Controllers
             raceRepository.Update(race);
             return RedirectToAction("Index");
         }
+        public async Task<IActionResult> Delete(int id)
+        {
+            var race = await raceRepository.GetByIdAsync(id);
+            if (race == null) return View("Error");
+            var raceVM = new EditRaceViewModel
+            {
+                Title = race.Title,
+                Description = race.Description,
+                AddressId = race.AddressId,
+                Address = race.Address,
+                URL = race.Image,
+                RaceCategory = race.RaceCategory,
+            };
+            return View(raceVM);
+        }
+        [HttpPost, ActionName("Deletee")]
+        public async Task<IActionResult> Delete(int id, EditRaceViewModel raceVM)
+        {
+            var userRace = await raceRepository.GetByIdAsyncNoTracking(id);
+            if (userRace == null)
+            {
+                return View("Error");
+            }
+            if (userRace.Image != null)
+                try
+                {
+                    string publicId = photoService.GetPublicIdFromUrl(userRace.Image);
+                    await photoService.DeletePhotoAsync(publicId);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "could not delete photo");
+                    return View(raceVM);
+                }
+            raceRepository.Delete(userRace);
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -1,0 +1,55 @@
+﻿@using TeddySmith.Data.Enum
+@using TeddySmith.ViewModels
+@model EditRaceViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h1>Are you sure you want to delete this race?</h1>
+<form asp-action="Deletee" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="Title" for="exampleInputEmail1">Title</label>
+        <input asp-for="Title" class="form-control" placeholder="Enter Title">
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" for="exampleInputEmail1">Description</label>
+        <input asp-for="Description" class="form-control" placeholder="Enter Description">
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Address.City" for="exampleInputEmail1">City</label>
+        <input asp-for="Address.City" class="form-control" placeholder="Enter City">
+        <span asp-validation-for="Address.City" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Address.Street" for="exampleInputEmail1">Street</label>
+        <input asp-for="Address.Street" class="form-control" placeholder="Enter Street">
+        <span asp-validation-for="Address.Street" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Address.State" for="exampleInputEmail1">State</label>
+        <input asp-for="Address.State" class="form-control" placeholder="Enter State">
+        <span asp-validation-for="Address.State" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="RaceCategory" for="exampleInputEmail1">Race Category</label>
+        <select asp-for="RaceCategory" asp-items="@Html.GetEnumSelectList<RaceCategory>()">
+            <option>please select</option>
+        </select>
+        <span asp-validation-for="RaceCategory" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Image" for="exampleInputEmail1">Image</label>
+        <input asp-for="Image" type="file" class="form-control" placeholder="Enter Image">
+        <span asp-validation-for="Image" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="URL" for="exampleInputEmail1">URL</label>
+        <input asp-for="URL" class="form-control" readonly>
+        <span asp-validation-for="URL" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

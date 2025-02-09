@@ -8,22 +8,24 @@
     {
         <div class="col-md-4">
             <div class="card mb-4 box-shadow">
-            <img class="card-img-top" src="@item.Image"  alt="Card image cap">
-            <div class="card-body">
-                <p class="card-text">@item.Title</p>
+                <img class="card-img-top" src="@item.Image" alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text">@item.Title</p>
                     <p class="card-text">@item.Description</p>
                     <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
+                        <div class="btn-group">
                             <a asp-controller="Race" asp-action="Detail" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">
                                 View
                             </a>
 
                             <a asp-controller="Race" asp-action="Edit" asp-route-id="@item.Id" type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a asp-controller="Race" asp-action="Delete" asp-route-id="@item.Id" type="button" class="btn btn-sm btn-outline-secondary">Delete</a>
+
                         </div>
-                    <small class="text-muted">9 mins</small>
+                        <small class="text-muted">9 mins</small>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     }
- </div>
+</div>
