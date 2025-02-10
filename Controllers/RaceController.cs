@@ -14,11 +14,13 @@ namespace TeddySmith.Controllers
     {
         private readonly IRaceRepository raceRepository;
         private readonly IPhotoService photoService;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public RaceController(IRaceRepository raceRepository, IPhotoService photoService)
+        public RaceController(IRaceRepository raceRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor)
         {
             this.raceRepository = raceRepository;
             this.photoService = photoService;
+            this.httpContextAccessor = httpContextAccessor;
         }
         public async Task<IActionResult> Index()
         {
@@ -45,7 +47,13 @@ namespace TeddySmith.Controllers
         }
         public IActionResult Create()
         {
-            return View();
+            var curUser = httpContextAccessor.HttpContext.User;
+            CreateRaceViewModel createRaceViewModel;
+            if (User.Identity.IsAuthenticated)
+                createRaceViewModel = new CreateRaceViewModel() { AppUserId = curUser.GetUserId() };
+            else
+             createRaceViewModel = new CreateRaceViewModel();
+            return View(createRaceViewModel);
         }
         [HttpPost]
         public async Task<IActionResult> Create(CreateRaceViewModel raceVM)
@@ -65,6 +73,7 @@ namespace TeddySmith.Controllers
                         State = raceVM.Address.State,
                     },
                     Image = result.Url.ToString(),
+                    AppUserId = raceVM.AppUserId
                 };
                 raceRepository.Add(race);
                 return RedirectToAction("Index");
@@ -84,6 +93,7 @@ namespace TeddySmith.Controllers
                 Address = race.Address,
                 URL = race.Image,
                 RaceCategory = race.RaceCategory,
+                AppUserId = race.AppUserId
             };
             return View(raceVM);
         }
@@ -127,6 +137,7 @@ namespace TeddySmith.Controllers
                 Image = photoResult?.Url?.ToString() ?? userRace.Image, 
                 AddressId = userRace.AddressId,
                 Address = raceVM.Address,
+                AppUserId = raceVM.AppUserId ?? null
             };
             raceRepository.Update(race);
             return RedirectToAction("Index");

@@ -14,5 +14,7 @@ namespace TeddySmith.ViewModels
         public int AddressId { get; set; }
         public Address Address { get; set; }
         public RaceCategory RaceCategory { get; internal set; }
+        public string? AppUserId { get; set; }
+
     }
 }

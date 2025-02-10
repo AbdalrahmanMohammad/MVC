@@ -13,11 +13,13 @@ namespace TeddySmith.Controllers
     {
         private readonly IClubRepository clubRepository;
         private readonly IPhotoService photoService;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public ClubController(IClubRepository clubRepository, IPhotoService photoService)
+        public ClubController(IClubRepository clubRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor)
         {
             this.clubRepository = clubRepository;
             this.photoService = photoService;
+            this.httpContextAccessor = httpContextAccessor;
         }
         public async Task<IActionResult> Index()
         {
@@ -35,7 +37,13 @@ namespace TeddySmith.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var curUser = httpContextAccessor.HttpContext.User;
+            CreateClubViewModel createClubViewModel;
+            if (User.Identity.IsAuthenticated)
+                createClubViewModel = new CreateClubViewModel() { AppUserId = curUser.GetUserId() };
+            else
+                createClubViewModel = new CreateClubViewModel();
+            return View(createClubViewModel);
         }
         [HttpPost]
         public async Task<IActionResult> Create(CreateClubViewModel clubVM)
@@ -55,6 +63,7 @@ namespace TeddySmith.Controllers
                         State = clubVM.Address.State,
                     },
                     ClubCategory = clubVM.ClubCategory,
+                    AppUserId = clubVM.AppUserId
                 };
                 clubRepository.Add(club);
                 return RedirectToAction("Index");
@@ -74,6 +83,7 @@ namespace TeddySmith.Controllers
                 Address = club.Address,
                 URL = club.Image,
                 ClubCategory = club.ClubCategory,
+                AppUserId=club.AppUserId
             };
             return View(clubVM);
         }
@@ -117,6 +127,7 @@ namespace TeddySmith.Controllers
                 Image = photoResult?.Url?.ToString() ?? userClub.Image,
                 AddressId = userClub.AddressId,
                 Address = clubVM.Address,
+                AppUserId = clubVM.AppUserId?? null
             };
             clubRepository.Update(club);
             return RedirectToAction("Index");
@@ -156,7 +167,7 @@ namespace TeddySmith.Controllers
                     ModelState.AddModelError("", "could not delete photo");
                     return View(clubVM);
                 }
-             clubRepository.Delete(userClub);
+            clubRepository.Delete(userClub);
             return RedirectToAction("Index");
         }
     }

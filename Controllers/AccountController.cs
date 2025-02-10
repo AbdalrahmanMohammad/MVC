@@ -72,7 +72,6 @@ namespace TeddySmith.Controllers
             return View(registerViewModel);
 
         }
-        [HttpPost]
         public async Task<IActionResult> Logout()
         { 
             await _signInManager.SignOutAsync();
