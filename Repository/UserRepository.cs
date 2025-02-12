@@ -30,7 +30,9 @@ namespace TeddySmith.Repository
 
         public async Task<AppUser> GetUserById(string id)
         {
-            return await context.Users.FindAsync(id);
+            return await context.Users
+                .Include(u => u.Address) 
+                .FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public bool Save()

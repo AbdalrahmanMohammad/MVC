@@ -27,7 +27,8 @@ namespace TeddySmith.Controllers
                     Id = i.Id,
                     UserName = i.UserName,
                     Pace = i.Pace,
-                    Mileage = i.Mileage
+                    Mileage = i.Mileage,
+                    Image=i.ProfileImageUrl
                 });
             }
 
